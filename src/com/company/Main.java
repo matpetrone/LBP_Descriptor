@@ -21,6 +21,9 @@ public class Main {
             f.add(jPanel);
             f.setVisible(true);
             Utils.convertToGrayScale(myPicture,"src/com/company/images/gray.jpg");
+            int matrix[][] = Utils.convertToMatrix(myPicture);
+            System.out.println(matrix);
+
         }catch (IOException err){
             System.out.println(err.getMessage());
         }
