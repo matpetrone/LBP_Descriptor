@@ -21,8 +21,11 @@ public class Main {
             f.add(jPanel);
             f.setVisible(true);
             Utils.convertToGrayScale(myPicture,"src/com/company/images/gray.jpg");
-            int matrix[][] = Utils.convertToMatrix(myPicture);
+            int matrix[][] = Utils.imageToMatrix(myPicture);
             System.out.println(matrix);
+            int[][] texture = Lbp.lbp(matrix);
+            BufferedImage text_image = Utils.matrixToImage(texture);
+            Utils.displayImage(text_image);
 
         }catch (IOException err){
             System.out.println(err.getMessage());
