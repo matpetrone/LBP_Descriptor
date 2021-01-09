@@ -38,28 +38,28 @@ public class Utils {
                 }
             }
             File ouptut = new File(filename);
-            System.out.println("Done");
+            //System.out.println("Done");
             ImageIO.write(myPicture, "jpg", ouptut);
         } catch (Exception e) {}
 
     }
     public static int[][] imageToMatrix(BufferedImage myPicture){
-        int pix[][]= new int[myPicture.getWidth()][myPicture.getHeight()];
-        for (int i = 0; i<myPicture.getWidth();i++){
-            for (int j=0;j< myPicture.getHeight();j++){ //W and H could be wrong assigned
-                pix[i][j]= myPicture.getRGB(i,j);
+        int pix[][]= new int[myPicture.getHeight()][myPicture.getWidth()];
+        for (int i = 0; i<myPicture.getHeight();i++){
+            for (int j=0;j< myPicture.getWidth();j++){ //W and H could be wrong assigned
+                pix[i][j]= myPicture.getRGB(j,i);
             }
         }
         return pix;
     }
 
     public static BufferedImage matrixToImage(int[][] matrix){
-        BufferedImage bufferedImage = new BufferedImage(matrix.length, matrix[0].length, BufferedImage.TYPE_INT_RGB);
+        BufferedImage bufferedImage = new BufferedImage(matrix[0].length, matrix.length, BufferedImage.TYPE_INT_RGB);
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
                 int pixel=matrix[i][j];
                 //System.out.println("The pixel in Matrix: "+pixel);
-                bufferedImage.setRGB(i, j, pixel);
+                bufferedImage.setRGB(j, i, pixel);
                 //System.out.println("The pixel in BufferedImage: "+bufferedImage.getRGB(i, j));
             }
         }
@@ -105,6 +105,61 @@ public class Utils {
         Integer[] arr = copy.toArray(new Integer[0]);
         return arr;
 
+    }
+
+    public static int[][] padding(int[][] matrix){ //padding for given matrix
+        int m = matrix.length+2;
+        int n = matrix[0].length+2;
+        int[][] padd_matrix = new int[m][n];
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(i==0 || j==0 || i==m-1 || j==n-1){
+                    padd_matrix[i][j] = 0;
+                }
+            }
+        }
+        for (int i = 1; i < m-1; i++) {
+            for (int j = 1; j < n-1; j++) {
+                try {
+                    padd_matrix[i][j] = matrix[i-1][j-1];
+
+                } catch (java.util.NoSuchElementException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return padd_matrix;
+    }
+
+    public static ArrayList<int[][]> split_matrix(int[][] matrix, int n_split){
+        int width = matrix[0].length; //split matrix vertically
+        ArrayList<int[][]> matrices = new ArrayList<int[][]>();
+        int inf = Math.floorDiv(width,n_split);
+        int start_split_idx;
+        for (int k = 0; k<n_split;k++){
+            int[][] new_matrix;
+            if (k!=n_split-1){
+                new_matrix = new int[matrix.length][inf];
+            }
+            else{
+                new_matrix = new int[matrix.length][width-k*inf];
+            }
+            for(int i =0; i<new_matrix.length; i++){
+                start_split_idx = k*inf;
+                for(int j=0;j< new_matrix[0].length; j++){
+                    new_matrix[i][j]=matrix[i][start_split_idx];
+                    System.out.println(i);
+                    System.out.println(j);
+                    System.out.println(start_split_idx);
+
+                    start_split_idx++;
+
+                }
+            }
+            matrices.add(new_matrix);
+        }
+        return matrices;
     }
 
 

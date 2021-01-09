@@ -7,7 +7,7 @@ import java.lang.Math;
 public class Lbp {
 
     public static int[][] lbp(int[][] greyImage){
-        int newImage[][] = new int[greyImage.length][greyImage[0].length];
+        int newImage[][] = new int[greyImage.length-2][greyImage[0].length-2]; //returned image don't have borders from padding
         int neighboor = 3;
         int chunks = neighboor*neighboor;
 
@@ -26,7 +26,7 @@ public class Lbp {
                     }
                 }
                 int flatArray[] = Utils.flatten(subImage);
-                System.out.println(Arrays.toString(flatArray));
+                //System.out.println(Arrays.toString(flatArray));
                 int flatArray_clean[] = Utils.deleteCenter(flatArray, 4);
                 Integer[] flatArray_index = Utils.validIndex(flatArray_clean);
                 int num=0;
@@ -38,7 +38,7 @@ public class Lbp {
                 }
                 else
                     num = 0;
-                newImage[i][j] = num;
+                newImage[i-1][j-1] = num; //returned image has been traslated on top-left respect to original one
             }
         }
 
