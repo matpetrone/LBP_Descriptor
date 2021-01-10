@@ -148,18 +148,31 @@ public class Utils {
             for(int i =0; i<new_matrix.length; i++){
                 start_split_idx = k*inf;
                 for(int j=0;j< new_matrix[0].length; j++){
-                    new_matrix[i][j]=matrix[i][start_split_idx];
-                    System.out.println(i);
-                    System.out.println(j);
-                    System.out.println(start_split_idx);
-
-                    start_split_idx++;
-
+                    new_matrix[i][j]=matrix[i][start_split_idx+j];
                 }
             }
             matrices.add(new_matrix);
         }
         return matrices;
+    }
+
+    public static int[][] merge_matrix(ArrayList<int[][]> matrices){  //merge splits
+        int original_width = 0;
+        int original_height = matrices.get(0).length;
+
+        for (int i = 0;i<matrices.size();i++){
+            original_width += matrices.get(i)[0].length;
+        }
+        int[][] result = new int[original_height][original_width];
+        for (int m = 0;m<matrices.size();m++){
+            int start_split_idx = m*matrices.get(0)[0].length;
+            for (int i = 0;i<original_height;i++){
+                for (int j = 0;j<matrices.get(m)[0].length;j++){
+                    result[i][start_split_idx+j] = matrices.get(m)[i][j];
+                }
+            }
+        }
+        return result;
     }
 
 
