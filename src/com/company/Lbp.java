@@ -5,7 +5,6 @@ import java.lang.Math;
 
 
 public class Lbp {
-
     public static int[][] lbp(int[][] greyImage){
         int newImage[][] = new int[greyImage.length-2][greyImage[0].length-2]; //returned image don't have borders from padding
         int neighboor = 3;

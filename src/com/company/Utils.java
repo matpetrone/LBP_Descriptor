@@ -4,6 +4,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ public class Utils {
         f.add(jPanel);
         f.setVisible(true);
     }
-    public static void convertToGrayScale(BufferedImage myPicture, String filename){
+    public static void convertToGrayScale(BufferedImage myPicture, String filename, boolean save){
         try {
             int width = myPicture.getWidth();
             int height = myPicture.getHeight();
@@ -37,16 +39,17 @@ public class Utils {
                     myPicture.setRGB(j,i,newColor.getRGB());
                 }
             }
-            File ouptut = new File(filename);
-            //System.out.println("Done");
-            ImageIO.write(myPicture, "jpg", ouptut);
+            if (save) {
+                File ouptut = new File(filename);
+                ImageIO.write(myPicture, "jpg", ouptut);
+            }
         } catch (Exception e) {}
 
     }
     public static int[][] imageToMatrix(BufferedImage myPicture){
         int pix[][]= new int[myPicture.getHeight()][myPicture.getWidth()];
         for (int i = 0; i<myPicture.getHeight();i++){
-            for (int j=0;j< myPicture.getWidth();j++){ //W and H could be wrong assigned
+            for (int j=0;j< myPicture.getWidth();j++){
                 pix[i][j]= myPicture.getRGB(j,i);
             }
         }
@@ -54,13 +57,12 @@ public class Utils {
     }
 
     public static BufferedImage matrixToImage(int[][] matrix){
-        BufferedImage bufferedImage = new BufferedImage(matrix[0].length, matrix.length, BufferedImage.TYPE_INT_RGB);
+        BufferedImage bufferedImage = new BufferedImage(matrix[0].length, matrix.length, BufferedImage.TYPE_BYTE_GRAY);
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
                 int pixel=matrix[i][j];
-                //System.out.println("The pixel in Matrix: "+pixel);
-                bufferedImage.setRGB(j, i, pixel);
-                //System.out.println("The pixel in BufferedImage: "+bufferedImage.getRGB(i, j));
+                Color newColor = new Color(pixel, pixel, pixel);
+                bufferedImage.setRGB(j, i, newColor.getRGB());
             }
         }
         return bufferedImage;
@@ -114,7 +116,7 @@ public class Utils {
         for(int i=0;i<m;i++){
             for(int j=0;j<n;j++){
                 if(i==0 || j==0 || i==m-1 || j==n-1){
-                    padd_matrix[i][j] = 0;
+                    padd_matrix[i][j] = 128;
                 }
             }
         }
@@ -156,10 +158,33 @@ public class Utils {
         return matrices;
     }
 
+    public static ArrayList<int[][]> split_matrix_horiz(int[][] matrix, int n_split){
+        int height = matrix.length; //split matrix horizontally
+        ArrayList<int[][]> matrices = new ArrayList<int[][]>();
+        int inf = Math.floorDiv(height,n_split);
+        int start_split_idx;
+        for (int k = 0; k<n_split;k++){
+            int[][] new_matrix;
+            if (k != n_split-1){
+                new_matrix = new int[inf][matrix[0].length];
+            }
+            else{
+                new_matrix = new int[height-k*inf][matrix[0].length];
+            }
+            for(int i =0; i<new_matrix.length; i++){
+                start_split_idx = k*inf;
+                for(int j=0;j< new_matrix[0].length; j++){
+                    new_matrix[i][j]=matrix[start_split_idx + i][j];
+                }
+            }
+            matrices.add(new_matrix);
+        }
+        return matrices;
+    }
+
     public static int[][] merge_matrix(ArrayList<int[][]> matrices){  //merge splits
         int original_width = 0;
         int original_height = matrices.get(0).length;
-
         for (int i = 0;i<matrices.size();i++){
             original_width += matrices.get(i)[0].length;
         }
@@ -175,6 +200,23 @@ public class Utils {
         return result;
     }
 
+    public static int[][] merge_matrix_horiz(ArrayList<int[][]> matrices){  //merge horizontally splits
+        int original_width = matrices.get(0)[0].length;
+        int original_height = 0;
+        for (int i = 0;i<matrices.size();i++){
+            original_height += matrices.get(i).length;
+        }
+        int[][] result = new int[original_height][original_width];
+        for (int m = 0; m < matrices.size(); m++){
+            int start_split_idx = m*matrices.get(0).length;
+            for (int i = 0;i < matrices.get(m).length; i++){
+                for (int j = 0;j < original_width;j++){
+                    result[start_split_idx + i][j] = matrices.get(m)[i][j];
+                }
+            }
+        }
+        return result;
+    }
 
 
 
