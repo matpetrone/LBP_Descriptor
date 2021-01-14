@@ -17,8 +17,9 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         Date date = new Date();
+        String pathToProject = System.getProperty("user.dir");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-        String csvPath = "/home/dellungo_petrone/LBP/LBP_Descriptor/res/results/";
+        String csvPath = pathToProject + "/res/results/";
         FileWriter csvResult = new FileWriter(csvPath + dateFormat.format(date) + ".csv", true);
         String[] imageNames = {"giraffe360p.jpg", "tiger480p.jpg", "leopard720p.jpg", "cheetah1080p.jpg", "deer2160p.jpg", "wolf4320p.jpg", "panorama8640p.jpg"};
         for (int i = 0; i < imageNames.length; i++){

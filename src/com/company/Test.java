@@ -13,10 +13,11 @@ import java.util.ArrayList;
 public class Test {
     public static void test(String imageName, FileWriter csvResults){
         try{
-            String imagePath = "/home/dellungo_petrone/LBP/LBP_Descriptor/res/images/" + imageName;
+            String pathToProject = System.getProperty("user.dir");
+            String imagePath = pathToProject + "/res/images/" + imageName;
             String imageSize = imageName.replaceAll("[^0-9]", "");
             BufferedImage myPicture = ImageIO.read(new File(imagePath));
-            String grayImagePath = "/home/dellungo_petrone/LBP/LBP_Descriptor/res/images/" + imageName.substring(0,imageName.indexOf("."))+"_gray.jpg";
+            String grayImagePath = pathToProject + "/res/images/" + imageName.substring(0,imageName.indexOf("."))+"_gray.jpg";
             String csvLine = "0,1" + "," + imageSize;
             int n_iter = 15;
             float delta_seq = 0;
@@ -79,11 +80,21 @@ public class Test {
                 csvLine = csvLine + "," + Float.toString(delta_par) + "," + Float.toString(speedUp) + "\n";
                 csvResults.append(csvLine);
                 System.out.format("SpeedUp with %d threads:%f%n", i, speedUp);
-                //int[][] mat = Utils.merge_matrix_horiz(lbp_splits);
-                //BufferedImage test_image = Utils.matrixToImage(mat);
-                //File ouptut = new File(grayImagePath);
-                //ImageIO.write(test_image, "jpg", ouptut);
-                //Utils.displayImage(test_image);
+                /*if (i == 4){
+                    String[] str = new String[i];
+                    for (int n = 0; n < lbp_splits.size(); n++){
+                        str[n] = Integer.toString(n);
+                        BufferedImage test_image = Utils.matrixToImage(lbp_splits.get(n));
+                        File ouptut = new File(pathToProject + "/res/images/" + str[n] + ".jpg");
+                        ImageIO.write(test_image, "jpg", ouptut);
+                    }
+                    int[][] mat = Utils.merge_matrix_horiz(lbp_splits);
+                    BufferedImage test_image = Utils.matrixToImage(mat);
+                    File ouptut = new File(pathToProject + "/res/images/gray.jpg");
+                    ImageIO.write(test_image, "jpg", ouptut);
+                    //Utils.displayImage(test_image);
+                }*/
+
             }
         }catch(IOException | InterruptedException err){
             System.out.println(err.getMessage());
