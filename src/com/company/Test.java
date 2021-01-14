@@ -13,12 +13,12 @@ import java.util.ArrayList;
 public class Test {
     public static void test(String imageName, FileWriter csvResults){
         try{
-            String imagePath = "/Users/matteo/Library/Mobile Documents/com~apple~CloudDocs/Università/Magistrale/Parallel Computing/LBP_Descriptor/res/images/" + imageName;
+            String imagePath = "/home/dellungo_petrone/LBP/LBP_Descriptor/res/images/" + imageName;
             String imageSize = imageName.replaceAll("[^0-9]", "");
             BufferedImage myPicture = ImageIO.read(new File(imagePath));
-            String grayImagePath = "/Users/matteo/Library/Mobile Documents/com~apple~CloudDocs/Università/Magistrale/Parallel Computing/LBP_Descriptor/res/images/" + imageName.substring(0,imageName.indexOf("."))+"_gray.jpg";
+            String grayImagePath = "/home/dellungo_petrone/LBP/LBP_Descriptor/res/images/" + imageName.substring(0,imageName.indexOf("."))+"_gray.jpg";
             String csvLine = "0,1" + "," + imageSize;
-            int n_iter = 100;
+            int n_iter = 15;
             float delta_seq = 0;
             int[][] text_matrix = new int[myPicture.getHeight()][myPicture.getWidth()];
             Utils.convertToGrayScale(myPicture, grayImagePath, false);

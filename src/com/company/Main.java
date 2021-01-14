@@ -18,7 +18,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-        String csvPath = "/Users/matteo/Library/Mobile Documents/com~apple~CloudDocs/Università/Magistrale/Parallel Computing/LBP_Descriptor/res/results/";
+        String csvPath = "/home/dellungo_petrone/LBP/LBP_Descriptor/res/results/";
         FileWriter csvResult = new FileWriter(csvPath + dateFormat.format(date) + ".csv", true);
         String[] imageNames = {"giraffe360p.jpg", "tiger480p.jpg", "leopard720p.jpg", "cheetah1080p.jpg", "deer2160p.jpg", "wolf4320p.jpg", "panorama8640p.jpg"};
         for (int i = 0; i < imageNames.length; i++){
