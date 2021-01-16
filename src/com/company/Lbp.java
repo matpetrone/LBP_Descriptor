@@ -13,13 +13,13 @@ public class Lbp {
 
         for (int i = 1; i<greyImage.length-1;i++){
             for (int j = 1; j<greyImage[0].length-1;j++){
-                lbp_code = new int[neighboor*neighboor -1];
+                int []lbp_code = new int[neighboor*neighboor -1];
                 int lbp_idx = 0;
 //                int subImage[][] = Utils.getSubMatrix(greyImage,i,j, neighboor);
 //                int center = subImage[1][1];
-                for (int h = -radius; h<radius;h++){
-                    for(int k = - radius; k < radius;k++){
-                        if(h==1 && k==1){}
+                for (int h = -radius; h<=radius;h++){
+                    for(int k = - radius; k <= radius;k++){
+                        if(h==0 && k==0){}
                         else{
                             if(greyImage[i+h][j+k]>= greyImage[i][j])
                                 lbp_code[lbp_idx++] = 1;

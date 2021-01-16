@@ -102,7 +102,7 @@ public class Test {
                     histResults.append(csvLine + "\n");
                 }
 
-                /*if (i == 4){
+                if (i == 4){
                     String[] str = new String[i];
                     for (int n = 0; n < lbp_splits.size(); n++){
                         str[n] = Integer.toString(n);
@@ -111,11 +111,11 @@ public class Test {
                         ImageIO.write(test_image, "jpg", ouptut);
                     }
 
-                    BufferedImage test_image = Utils.matrixToImage(mat);
+                    BufferedImage test_image = Utils.matrixToImage(text_matrix);
                     File ouptut = new File(pathToProject + "/res/images/gray.jpg");
                     ImageIO.write(test_image, "jpg", ouptut);
                     //Utils.displayImage(test_image);
-                }*/
+                }
 
             }
         }catch(IOException | InterruptedException err){
