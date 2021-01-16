@@ -21,10 +21,12 @@ public class Main {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         String csvPath = pathToProject + "/res/results/";
         FileWriter csvResult = new FileWriter(csvPath + dateFormat.format(date) + ".csv", true);
+        FileWriter histResult = new FileWriter(csvPath + dateFormat.format(date) + "_histogram.csv", true);
         String[] imageNames = {"giraffe360p.jpg", "tiger480p.jpg", "leopard720p.jpg", "cheetah1080p.jpg", "deer2160p.jpg", "wolf4320p.jpg", "panorama8640p.jpg"};
         for (int i = 0; i < imageNames.length; i++){
-            Test.test(imageNames[i], csvResult);
+            Test.test(imageNames[i], csvResult, histResult);
         }
         csvResult.close();
+        histResult.close();
     }
 }

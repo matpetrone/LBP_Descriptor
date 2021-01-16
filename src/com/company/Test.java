@@ -9,9 +9,11 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Test {
-    public static void test(String imageName, FileWriter csvResults){
+    public static void test(String imageName, FileWriter csvResults, FileWriter histResults){
         try{
             String pathToProject = System.getProperty("user.dir");
             String imagePath = pathToProject + "/res/images/" + imageName;
@@ -20,6 +22,8 @@ public class Test {
             String grayImagePath = pathToProject + "/res/images/" + imageName.substring(0,imageName.indexOf("."))+"_gray.jpg";
             String csvLine = "0,1" + "," + imageSize;
             int n_iter = 15;
+            csvResults.append("n. runs: " + Integer.toString(n_iter) + "%n");
+            histResults.append("n. runs: " + Integer.toString(n_iter) + "%n");
             float delta_seq = 0;
             int[][] text_matrix = new int[myPicture.getHeight()][myPicture.getWidth()];
             int[] histogram = new int[256];
@@ -34,7 +38,7 @@ public class Test {
             for (int i = 0; i < n_iter; i++){
                 start1 = Instant.now();
                 text_matrix = Lbp.lbp(padd_matrix);
-                histogram = Lbp.getHistogram(text_matrix);
+                histogram = Lbp.computeHistogram(text_matrix);
                 end1 = Instant.now();
                 delta_seq += Duration.between(start1, end1).toMillis();
             }
@@ -42,8 +46,11 @@ public class Test {
             System.out.format("Sequential Time Execution:%f%n", delta_seq);
             csvLine = csvLine + "," + Float.toString(delta_seq) + "\n";
             csvResults.append(csvLine);
-            if (Lbp.verifyHistogram(histogram, text_matrix))
-                System.out.printf("Histogram is correct!");
+            if (Lbp.verifyHistogram(histogram, text_matrix)) {
+                //System.out.printf("Histogram is correct!");
+                csvLine = IntStream.of(histogram).mapToObj(Integer::toString).collect(Collectors.joining(","));
+                histResults.append(csvLine + "%n");
+            }
             //BufferedImage text_image = Utils.matrixToImage(text_matrix);
             //File ouptut = new File(grayImagePath);
             //ImageIO.write(text_image, "jpg", ouptut);
@@ -57,6 +64,7 @@ public class Test {
                 csvLine = "1," + Integer.toString(i)+ "," + imageSize;
                 ArrayList<int[][]> lbp_splits = new ArrayList<int[][]>();
                 ArrayList<Thread_lbp> threads;
+                ArrayList<int[]> histograms = new ArrayList<int[]>();
                 ArrayList<int[][]> splits = Utils.split_matrix_horiz(matrix, i);
                 for (int l = 0; l < splits.size(); l++)
                     splits.set(l, Utils.padding(splits.get(l)));
@@ -66,6 +74,7 @@ public class Test {
                 for (int k = 0; k < n_iter; k++){
                     threads = new ArrayList<Thread_lbp>();
                     lbp_splits = new ArrayList<int[][]>();
+                    histograms = new ArrayList<int[]>();
                     start2 = Instant.now();
                     for (int j = 0; j < i; j++){
                         threads.add(new Thread_lbp(splits.get(j),j));
@@ -74,6 +83,7 @@ public class Test {
                     for (int j = 0; j < i; j++){
                         threads.get(j).join();
                         lbp_splits.add(threads.get(j).getResult_matrix());
+                        histograms.add(threads.get(j).getHistogram());
                     }
                     end2 = Instant.now();
                     delta_par += Duration.between(start2, end2).toMillis();
@@ -84,6 +94,14 @@ public class Test {
                 csvLine = csvLine + "," + Float.toString(delta_par) + "," + Float.toString(speedUp) + "\n";
                 csvResults.append(csvLine);
                 System.out.format("SpeedUp with %d threads:%f%n", i, speedUp);
+                text_matrix = Utils.merge_matrix_horiz(lbp_splits);
+                histogram = Utils.merge_histogram(histograms);
+                if(Lbp.verifyHistogram(histogram, text_matrix)){
+                    //System.out.printf("Histogram is correct!");
+                    csvLine = IntStream.of().mapToObj(Integer::toString).collect(Collectors.joining(","));
+                    histResults.append(csvLine + "%n");
+                }
+
                 /*if (i == 4){
                     String[] str = new String[i];
                     for (int n = 0; n < lbp_splits.size(); n++){
@@ -92,7 +110,7 @@ public class Test {
                         File ouptut = new File(pathToProject + "/res/images/" + str[n] + ".jpg");
                         ImageIO.write(test_image, "jpg", ouptut);
                     }
-                    int[][] mat = Utils.merge_matrix_horiz(lbp_splits);
+
                     BufferedImage test_image = Utils.matrixToImage(mat);
                     File ouptut = new File(pathToProject + "/res/images/gray.jpg");
                     ImageIO.write(test_image, "jpg", ouptut);

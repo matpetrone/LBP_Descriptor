@@ -218,6 +218,15 @@ public class Utils {
         return result;
     }
 
+    public static int[] merge_histogram(ArrayList<int[]> histograms){
+        int[] new_hist = new int[256];
+        for (int i = 0; i < new_hist.length; i++){
+            for (int j = 0; j < histograms.size(); j++)
+                new_hist[i] += histograms.get(j)[i];
+        }
+        return new_hist;
+    }
+
 
 
 }
