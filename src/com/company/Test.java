@@ -22,8 +22,8 @@ public class Test {
             String grayImagePath = pathToProject + "/res/images/" + imageName.substring(0,imageName.indexOf("."))+"_gray.jpg";
             String csvLine = "0,1" + "," + imageSize;
             int n_iter = 15;
-            csvResults.append("n. runs: " + Integer.toString(n_iter) + "%n");
-            histResults.append("n. runs: " + Integer.toString(n_iter) + "%n");
+            csvResults.append("n. runs: " + Integer.toString(n_iter) + "\n");
+            histResults.append("n. runs: " + Integer.toString(n_iter) + "\n");
             float delta_seq = 0;
             int[][] text_matrix = new int[myPicture.getHeight()][myPicture.getWidth()];
             int[] histogram = new int[256];
@@ -49,7 +49,7 @@ public class Test {
             if (Lbp.verifyHistogram(histogram, text_matrix)) {
                 //System.out.printf("Histogram is correct!");
                 csvLine = IntStream.of(histogram).mapToObj(Integer::toString).collect(Collectors.joining(","));
-                histResults.append(csvLine + "%n");
+                histResults.append(csvLine + "\n");
             }
             //BufferedImage text_image = Utils.matrixToImage(text_matrix);
             //File ouptut = new File(grayImagePath);
@@ -99,7 +99,7 @@ public class Test {
                 if(Lbp.verifyHistogram(histogram, text_matrix)){
                     //System.out.printf("Histogram is correct!");
                     csvLine = IntStream.of().mapToObj(Integer::toString).collect(Collectors.joining(","));
-                    histResults.append(csvLine + "%n");
+                    histResults.append(csvLine + "\n");
                 }
 
                 /*if (i == 4){
