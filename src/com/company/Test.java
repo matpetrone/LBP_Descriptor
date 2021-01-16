@@ -22,6 +22,7 @@ public class Test {
             int n_iter = 15;
             float delta_seq = 0;
             int[][] text_matrix = new int[myPicture.getHeight()][myPicture.getWidth()];
+            int[] histogram = new int[256];
             Utils.convertToGrayScale(myPicture, grayImagePath, false);
             int matrix[][] = Utils.imageToMatrix(myPicture);
 
@@ -33,6 +34,7 @@ public class Test {
             for (int i = 0; i < n_iter; i++){
                 start1 = Instant.now();
                 text_matrix = Lbp.lbp(padd_matrix);
+                histogram = Lbp.getHistogram(text_matrix);
                 end1 = Instant.now();
                 delta_seq += Duration.between(start1, end1).toMillis();
             }
@@ -40,6 +42,8 @@ public class Test {
             System.out.format("Sequential Time Execution:%f%n", delta_seq);
             csvLine = csvLine + "," + Float.toString(delta_seq) + "\n";
             csvResults.append(csvLine);
+            if (Lbp.verifyHistogram(histogram, text_matrix))
+                System.out.printf("Histogram is correct!");
             //BufferedImage text_image = Utils.matrixToImage(text_matrix);
             //File ouptut = new File(grayImagePath);
             //ImageIO.write(text_image, "jpg", ouptut);

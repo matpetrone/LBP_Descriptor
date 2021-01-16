@@ -1,19 +1,25 @@
 package com.company;
 
-public class Thread_lbp extends Thread {
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class Thread_lbp implements Runnable {
 
     private int idx;
-    private int[][] grey_matrix;
+    private int[][] gray_matrix;
     private int[][] result_matrix;
+    AtomicInteger[] histogram;
+
 
 
     public Thread_lbp(int[][] matrix, int idx){
         this.idx = idx;
-        grey_matrix = matrix;
+        gray_matrix = matrix;
+        histogram = new AtomicInteger[256];
+        result_matrix = new int[gray_matrix.length - 2][gray_matrix[0].length - 2];
     }
 
     public void run(){
-        result_matrix = Lbp.lbp(grey_matrix);
+        Lbp.lbp_threads(gray_matrix, result_matrix);
     }
 
     public int[][] getResult_matrix() {
