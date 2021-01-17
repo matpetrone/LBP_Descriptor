@@ -13,7 +13,7 @@ public class Thread_lbp extends Thread {
 
     public Thread_lbp(int[][] matrix, int idx){
         this.idx = idx;
-        gray_matrix = matrix.clone();
+        gray_matrix = matrix;
         histogram = new int[256];
     }
 
