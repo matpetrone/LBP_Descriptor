@@ -39,7 +39,6 @@ public class Lbp {
               //  Integer[] flatArray_index = Utils.validIndex(flatArray_clean);
                // int num=0;
                 int sum = 0;
-                
                 for(int c_idx=0; c_idx<lbp_code.length; c_idx++){
                     sum +=  Math.pow(2,c_idx) * lbp_code[c_idx];
                 }
